@@ -2,4 +2,4 @@ numpy
 onnxruntime
 Pillow
 requests
-RobotNotice
+RobotNotice==0.0.2

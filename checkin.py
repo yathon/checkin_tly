@@ -11,7 +11,7 @@ import requests
 from PIL import Image
 
 import ocr
-from RobotNotice.RobotNotice import notice
+from RobotNotice import notice
 
 
 domain = os.environ["DOMAIN"]
