@@ -18,6 +18,7 @@ domain = os.environ["DOMAIN"]
 user = os.environ["USER"]
 pwd = os.environ["PWD"]
 key = os.environ["KEY"]
+cookie = os.environ["COOKIE"]
 robot = os.environ["ROBOT"]
 robot_key = os.environ["ROBOT_KEY"]
 
@@ -30,15 +31,16 @@ class Checkin:
     def __init__(self):
         self.Login_url = f"https://{domain}/modules/_login.php"
         self.captcha_url = f"https://{domain}/other/captcha.php"
-        self.Login_data = {
-            'email': self._d(user, key),
-            'passwd': self._d(pwd, key),
-            'remember_me': 'week'
-        }
-        self.header = {
+        # self.Login_data = {
+        #     'email': self._d(user, key),
+        #     'passwd': self._d(pwd, key),
+        #     'remember_me': 'week'
+        # }
+        self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                           "AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/75.0.3739.0 Safari/537.36 Edg/75.0.111.0 "
+                          "Chrome/75.0.3739.0 Safari/537.36 Edg/75.0.111.0 ",
+            "cookie": cookie
         }
         self.count_number = 0
         self.session = requests.session()
@@ -90,7 +92,7 @@ class Checkin:
     def get_cat(self):
         try:
             self.count_number += 1
-            content = self.session.get(self.captcha_url.format(), headers=self.header).content
+            content = self.session.get(self.captcha_url.format(), headers=self.headers).content
             yzm = self.captcha_main(content)
             if not yzm or len(yzm) != 4 or self.has_chs(yzm):
                 if self.count_number < 50:
@@ -104,8 +106,13 @@ class Checkin:
             logging.info(f'识别的验证码： {yzm}')
             code_url = 'https://' + domain + '/modules/_checkin.php?captcha=' + yzm
             # print(code_url)
-            data = self.session.get(str(code_url), headers=self.header)
+            data = self.session.get(str(code_url), headers=self.headers)
+            print(data.text)
             result = re.findall(r'<script>alert(.*);self.location=document.referrer;</script>', data.text)
+            if not result:
+                info = f'[{robot_key}]需要邮箱验证，请验证后重试'
+                notice(info, robot)
+                return True
             msg = result[0]
             info = f'[{robot_key}][{yzm}] {msg}'
             logging.info(info)
@@ -116,19 +123,20 @@ class Checkin:
             self.count_number = 0
             return True
         except Exception as e:
-            logging.error(f'Project_Error: {e}')
+            logging.exception(f'Project_Error: {e}')
         return False
 
     def login(self):
         try:
-            html = self.session.post(self.Login_url.format(), data=self.Login_data,
-                                     headers=self.header, timeout=30)
-            html.encoding = html.apparent_encoding
-            login_data = json.loads(html.text)
-            # logger(login_data)
-            if login_data['ok'] == '1':
-                logging.info('Login_Ok!')
-                return self.get_cat()
+            # html = self.session.post(self.Login_url.format(), data=self.Login_data,
+            #                          headers=self.headers, timeout=30)
+            # html.encoding = html.apparent_encoding
+            # login_data = json.loads(html.text)
+            # # logger(login_data)
+            # if login_data['ok'] == '1':
+            #     logging.info('Login_Ok!')
+            #     return self.get_cat()
+            pass
         except Exception as e:
             logging.error(f'Login_Error: {e}')
         return False
@@ -149,4 +157,4 @@ class Checkin:
 if __name__ == '__main__':
     ckn = Checkin()
     # ckn.run()
-    ckn.login()
+    ckn.get_cat()

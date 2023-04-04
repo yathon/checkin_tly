@@ -40,6 +40,7 @@ jobs:
         USER: ${{ secrets.USER }}
         PWD: ${{ secrets.PWD }}
         KEY: ${{ secrets.KEY }}
+        COOKIE: ${{ secrets.COOKIE }}
         ROBOT: ${{ secrets.ROBOT }}
         ROBOT_KEY: ${{ secrets.ROBOT_KEY }}
     - uses: gautamkrishnar/keepalive-workflow@master # using the workflow with default settings
