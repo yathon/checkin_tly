@@ -1,23 +1,17 @@
 # -*- coding: utf-8 -*-
-import os
 import base64
 import io
-import json
 import logging
+import os
 import re
 import time
 
 import requests
 from PIL import Image
-
-import ocr
 from RobotNotice import notice
-
+import ocr
 
 domain = os.environ["DOMAIN"]
-user = os.environ["USER"]
-pwd = os.environ["PWD"]
-key = os.environ["KEY"]
 cookie = os.environ["COOKIE"]
 robot = os.environ["ROBOT"]
 robot_key = os.environ["ROBOT_KEY"]

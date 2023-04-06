@@ -37,9 +37,6 @@ jobs:
         python3 checkin.py 
       env: 
         DOMAIN: ${{ secrets.DOMAIN }}
-        USER: ${{ secrets.USER }}
-        PWD: ${{ secrets.PWD }}
-        KEY: ${{ secrets.KEY }}
         COOKIE: ${{ secrets.COOKIE }}
         ROBOT: ${{ secrets.ROBOT }}
         ROBOT_KEY: ${{ secrets.ROBOT_KEY }}
