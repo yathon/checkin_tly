@@ -11,10 +11,10 @@ from PIL import Image
 from RobotNotice import notice
 import ocr
 
-domain = os.environ["DOMAIN"]
-cookie = os.environ["COOKIE"]
-robot = os.environ["ROBOT"]
-robot_key = os.environ["ROBOT_KEY"]
+domain = os.environ.get("DOMAIN")
+cookie = os.environ.get("COOKIE")
+robot = os.environ.get("ROBOT")
+robot_key = os.environ.get("ROBOT_KEY")
 
 TEMP_PATH = '/tmp'
 logging.basicConfig(level='DEBUG', format='[%(asctime)s][%(levelname)s] %(message)s')

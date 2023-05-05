@@ -1,0 +1,30 @@
+name: python-daily-task
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron:  0 9 * * *
+
+jobs:
+  daily-task:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Python3
+      run: |
+        sudo apt update && \
+        sudo apt install python3
+        if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
+
+    - name: Set env && Do Task
+      run: |
+        python3 main.py
+      env: ${{ secrets }}
+
+    - uses: gautamkrishnar/keepalive-workflow@master # using the workflow with default settings
